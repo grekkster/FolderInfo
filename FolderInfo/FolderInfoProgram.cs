@@ -9,7 +9,7 @@ namespace FolderInfo
 {
     //Připravte program, jehož úkolem bude projít podadresáře daného vstupního adresáře všech úrovní a vypsat průměrnou velikost adresáře, minimální a maximální velikost.Velikostí adresáře v tomto případě rozumíme součet velikostí souborů v daném adresáři, bez podadresářů.Implementovat vstup a výstup programu je dobrovolné, adresář je možno mít zadaný přímo do proměnné v kódu a vstup na konzoli, kreativitě se ale meze nekladou.Implementovat v C# s .Net (ideálně dodat výsledek jako solution Visual Studia). 
 
-    class FolderInfo
+    class FolderInfoProgram
     {
         private static readonly string appDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
@@ -38,11 +38,10 @@ namespace FolderInfo
             Console.ReadKey();
         }
 
-        private static void PrintFolderInfo(string directory)
+        private static void PrintFolderInfo(string directoryToScan)
         {
-            int averageSize;
-            int minSize;
-            int maxSize;
+            // average, min, max, overall
+            var folderData = new FolderData(directoryToScan);
 
             // rekurzivní funkce, projde adresář, 
 
