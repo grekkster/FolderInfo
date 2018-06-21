@@ -46,7 +46,7 @@ namespace FolderInfo
             Console.WriteLine($"Folder: {folderData.Directory} data:");
             Console.WriteLine($"Size: {folderData.Size}");
             Console.WriteLine($"Folder count: {folderData.FolderCount}");
-            Console.WriteLine($"Average folde size: {folderData.AverageFolderSize}");
+            Console.WriteLine($"Average folder size: {folderData.AverageFolderSize}");
             Console.WriteLine($"Min folder size: {folderData.MinFolderSize}");
             Console.WriteLine($"Max folder size: {folderData.MaxFolderSize}");
             // rekurzivní funkce, projde adresář, 
