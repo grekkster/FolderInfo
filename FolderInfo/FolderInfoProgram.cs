@@ -15,10 +15,11 @@ namespace FolderInfo
 
         static void Main(string[] args)
         {
+            //TODO all dirs arg
+            //TODO static class
             Console.WriteLine("Enter directory to scan:");
             var directoryToScan = Console.ReadLine();
             directoryToScan = Path.GetFullPath(String.IsNullOrEmpty(directoryToScan) ? appDir : directoryToScan);
-
             try
             {
                 // nonexistent directory
@@ -42,7 +43,12 @@ namespace FolderInfo
         {
             // average, min, max, overall
             var folderData = new FolderData(directoryToScan);
-
+            Console.WriteLine($"Folder: {folderData.Directory} data:");
+            Console.WriteLine($"Size: {folderData.Size}");
+            Console.WriteLine($"Folder count: {folderData.FolderCount}");
+            Console.WriteLine($"Average folde size: {folderData.AverageFolderSize}");
+            Console.WriteLine($"Min folder size: {folderData.MinFolderSize}");
+            Console.WriteLine($"Max folder size: {folderData.MaxFolderSize}");
             // rekurzivní funkce, projde adresář, 
 
             // Pro každý adresář vypsat:
