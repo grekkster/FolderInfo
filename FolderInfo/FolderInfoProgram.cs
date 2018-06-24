@@ -55,6 +55,12 @@ namespace FolderInfo
             // 1) průměrná velikost adresáře (soubory, bez podadresářů !)
             // 2) min velikost adresáře (soubory, bez podadresářů !)
             // 3) max velikost adresáře (soubory, bez podadresářů !)
+
+            //System.Windows.Forms.MessageBox.Show("Hello");
+            FolderDataView folderDataView = new FolderDataView(folderData);
+            //folderDataView.? show možnosti?
+            // TODO using?
+            folderDataView.ShowDialog();
         }
     }
 }

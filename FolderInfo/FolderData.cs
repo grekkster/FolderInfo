@@ -16,6 +16,7 @@ namespace FolderInfo
         private long minFolderSize = 0;
         private long size = 0;
         private long maxFolderSize = 0;
+        private long sizeWithoutSubFolders = 0;
         private int folderCount = 0;
         private List<FolderData> subFolderData = new List<FolderData>();
 
@@ -24,6 +25,7 @@ namespace FolderInfo
         public long AverageFolderSize => Size / FolderCount;
         public long MinFolderSize => minFolderSize;
         public long MaxFolderSize => maxFolderSize;
+        public long SizeWithoutSubFolders => sizeWithoutSubFolders;
         public string Directory { get; }
 
         public List<FolderData> SubFolderData => subFolderData;
@@ -41,6 +43,8 @@ namespace FolderInfo
             long folderSize = 0;
             folderCount++;
             folderSize = GetDirectorySize(directory);
+            // TODO zbytečný, stačí použít folderSize ???
+            sizeWithoutSubFolders = folderSize;
             size += folderSize;
             minFolderSize = folderSize;
             maxFolderSize = folderSize;
