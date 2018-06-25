@@ -1,22 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FolderInfo
 {
-    //Připravte program, jehož úkolem bude projít podadresáře daného vstupního adresáře všech úrovní a vypsat průměrnou velikost adresáře, minimální a maximální velikost.Velikostí adresáře v tomto případě rozumíme součet velikostí souborů v daném adresáři, bez podadresářů.Implementovat vstup a výstup programu je dobrovolné, adresář je možno mít zadaný přímo do proměnné v kódu a vstup na konzoli, kreativitě se ale meze nekladou.Implementovat v C# s .Net (ideálně dodat výsledek jako solution Visual Studia). 
-
+    /// <summary>
+    /// Program displaying user specified folder information
+    /// </summary>
     class FolderInfoProgram
     {
+        // default folder, if user does not specify input folder
         private static readonly string appDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        // program argument switch to display info for subdirectories
+        private static bool argAllDirs;
+        // program argument switch to display folder info in a form with tree view
+        private static bool argShowTree;
+        // property position in console display
+        private const int PropertyAlignment = -28;
+        // value position in console display
+        private const int ValueAlignment = 15;
 
         static void Main(string[] args)
         {
-            //TODO all dirs arg
-            //TODO static class
+            // parse optional command line arguments
+            if (args != null)
+            {
+                // show info for subdirectories
+                argAllDirs = args.Contains("alldirs");
+                // show info in a form with tree view
+                argShowTree = args.Contains("showtree");
+            }
+
+            // read user folder input directory
             Console.WriteLine("Enter directory to scan:");
             var directoryToScan = Console.ReadLine();
             directoryToScan = Path.GetFullPath(String.IsNullOrEmpty(directoryToScan) ? appDir : directoryToScan);
@@ -27,40 +42,60 @@ namespace FolderInfo
                 {
                     Console.WriteLine($"Directory: {directoryToScan} does not exist.");
                 }
-
-                Console.WriteLine($"Scanning directory: {directoryToScan}");
-                PrintFolderInfo(directoryToScan);
+                // process the directory
+                else
+                {
+                    Console.WriteLine($"Scanning directory: {directoryToScan}{Environment.NewLine}");
+                    // create folder data
+                    var folderData = new FolderData(directoryToScan);
+                    // print results
+                    PrintFolderInfo(folderData);
+                    // optinally show tree view
+                    if (argShowTree)
+                    {
+                        using (var folderDataView = new FolderDataView(folderData))
+                        {
+                            folderDataView.ShowDialog();
+                        }
+                    }
+                }
             }
             catch (Exception exc)
             {
                 Console.WriteLine($"Error occured:{Environment.NewLine}{exc.Message}");
             }
 
+            // close program
+            Console.WriteLine(Environment.NewLine + "Press any key to exit.");
             Console.ReadKey();
         }
 
-        private static void PrintFolderInfo(string directoryToScan)
+        /// <summary>
+        /// Prints computed folder info in a console
+        /// </summary>
+        /// <param name="folderData">Folder data</param>
+        private static void PrintFolderInfo(FolderData folderData)
         {
-            // average, min, max, overall
-            var folderData = new FolderData(directoryToScan);
-            Console.WriteLine($"Folder: {folderData.Directory} data:");
-            Console.WriteLine($"Size: {folderData.Size}");
-            Console.WriteLine($"Folder count: {folderData.FolderCount}");
-            Console.WriteLine($"Average folder size: {folderData.AverageFolderSize}");
-            Console.WriteLine($"Min folder size: {folderData.MinFolderSize}");
-            Console.WriteLine($"Max folder size: {folderData.MaxFolderSize}");
-            // rekurzivní funkce, projde adresář, 
 
-            // Pro každý adresář vypsat:
-            // 1) průměrná velikost adresáře (soubory, bez podadresářů !)
-            // 2) min velikost adresáře (soubory, bez podadresářů !)
-            // 3) max velikost adresáře (soubory, bez podadresářů !)
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine($"Folder: {folderData.Directory}");
+            Console.ResetColor();
+            Console.WriteLine($"{"Size:", PropertyAlignment}{folderData.Size, ValueAlignment}");
+            Console.WriteLine($"{"Size Without SubFolders:", PropertyAlignment}{folderData.SizeWithoutSubFolders, ValueAlignment}");
+            Console.WriteLine($"{"Folder Count:", PropertyAlignment}{folderData.FolderCount, ValueAlignment}");
+            Console.WriteLine($"{"Min Folder Size:", PropertyAlignment}{folderData.MinFolderSize, ValueAlignment}");
+            Console.WriteLine($"{"Max folder Size:", PropertyAlignment}{folderData.MaxFolderSize, ValueAlignment}");
+            Console.WriteLine($"{"Average Folder size:", PropertyAlignment}{folderData.AverageFolderSize, ValueAlignment}");
 
-            //System.Windows.Forms.MessageBox.Show("Hello");
-            FolderDataView folderDataView = new FolderDataView(folderData);
-            //folderDataView.? show možnosti?
-            // TODO using?
-            folderDataView.ShowDialog();
+            // print subdirectories if command switch is set
+            if (argAllDirs)
+            {
+                foreach (var subFolderData in folderData.SubFolderData)
+                {
+                    PrintFolderInfo(subFolderData);
+                }
+            }
         }
     }
 }
